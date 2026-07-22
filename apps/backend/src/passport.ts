@@ -11,12 +11,12 @@ const initPassport = () => {
       const user = await userRepository.getByUsername(username);
 
       if (!user) {
-        done(null, false, { message: 'Incorrect username' });
+        done(null, false, { message: 'Incorrect username', code: 401 });
         return;
       }
 
       if (user.auth_provider === 'google') {
-        done(null, false, { message: 'Login with your Google Account'})
+        done(null, false, { message: 'Login with your Google Account', code: 400 })
       }
 
       if (!(await bcrypt.compare(password, user.password))) {

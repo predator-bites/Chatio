@@ -14,17 +14,26 @@ import ErrorMiddleware from './middlewares/ErrorMiddleware';
 import initPassport from './passport';
 import passport from 'passport';
 import SessionMiddleware from './middlewares/SessionMiddleware';
+import { rateLimit } from 'express-rate-limiter';
 
 export default function createServer() {
   const app = express();
 
   app.use(express.json());
+
   app.use(
     cors({
       origin: process.env.ORIGIN,
       credentials: true,
     }),
   );
+
+  app.use(rateLimit({
+    windowMs: ms('1m'),
+    limit: 200,
+    message: 'Too many request'
+  }))
+
   app.use(cookieParser());
 
   app.set('trust proxy', 1);

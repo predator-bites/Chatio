@@ -12,7 +12,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
     (
       err: string | null,
       user: Express.User | null,
-      info: { message: string, code: number } = null,
+      info: IVerifyOptions | null,
     ) => {
       if (err) {
         return next(ApiError.badRequest(err));
