@@ -61,11 +61,32 @@ export const ChatPage: React.FC = () => {
   const onlineUserIds = useOnlineUsers(user?.id ?? null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, setMessages, typingUsers, sendTyping } = useRoomMessages(
-    activeRoom?.id || null,
-    user?.id || null,
-    user?.username || null,
-  );
+  const handleReconnect = useCallback(async () => {
+    if (!activeRoom || !user) return;
+
+    try {
+      const updatedRooms = await roomApi.getUserRooms();
+      setRooms([GENERAL_ROOM, ...updatedRooms]);
+
+      const data =
+        activeRoom.id === 'general'
+          ? await messageApi.getGeneralRoomMessages()
+          : await roomApi.getMessages(activeRoom.id);
+
+      setMessages(data);
+      showToast('Reconnected to chat server', 'success');
+    } catch {
+      // silent catch during reconnect
+    }
+  }, [activeRoom, user, setMessages, showToast]);
+
+  const { messages, setMessages, typingUsers, sendTyping, connected } =
+    useRoomMessages(
+      activeRoom?.id || null,
+      user?.id || null,
+      user?.username || null,
+      handleReconnect,
+    );
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -350,6 +371,11 @@ export const ChatPage: React.FC = () => {
       />
 
       <main className={mainClassName}>
+        {!connected && (
+          <div className="bg-amber-500 text-white text-xs font-semibold text-center py-1.5 px-3 tracking-wide shrink-0 animate-pulse">
+            Connecting to chat server...
+          </div>
+        )}
         <ChatHeader
           activeRoom={activeRoom}
           currentUserId={user.id}

@@ -22,6 +22,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const socketInstance = io(BACKEND_URL, {
       withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
     });
 
     setSocket(socketInstance);
@@ -31,17 +35,24 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
       setConnected(true);
     };
 
-    const onDisconnect = () => {
-      console.log('[socket] disconnected');
+    const onDisconnect = (reason: string) => {
+      console.log('[socket] disconnected:', reason);
+      setConnected(false);
+    };
+
+    const onConnectError = (error: Error) => {
+      console.warn('[socket] connection error:', error.message);
       setConnected(false);
     };
 
     socketInstance.on('connect', onConnect);
     socketInstance.on('disconnect', onDisconnect);
+    socketInstance.on('connect_error', onConnectError);
 
     return () => {
       socketInstance.off('connect', onConnect);
       socketInstance.off('disconnect', onDisconnect);
+      socketInstance.off('connect_error', onConnectError);
       socketInstance.disconnect();
       setSocket(null);
       setConnected(false);
