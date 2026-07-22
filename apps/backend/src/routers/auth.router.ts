@@ -6,7 +6,7 @@ import AuthMiddleware from '../middlewares/AuthMiddleware'
 const router = Router();
 
 router.post('/login', authController.login);
-router.post('/logout', authController.logout);
+router.post('/logout', AuthMiddleware ,authController.logout);
 
 router.get('/google', authController.getGoogleUrl);
 router.get(
