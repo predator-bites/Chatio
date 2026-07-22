@@ -87,7 +87,9 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = () => navigate(import.meta.env.SERVER_URL + '/auth/google')
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_SERVER_URL}/auth/google`;
+  };
 
   return (
     <div className="min-h-screen w-full bg-primary-50 flex flex-col items-center justify-between px-5 pt-14 pb-10 overflow-hidden relative">
