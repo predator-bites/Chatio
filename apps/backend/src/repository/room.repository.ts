@@ -28,7 +28,19 @@ const getUserRooms = (userId: string) => {
 const getRoomWithMessages = (roomId: string) => {
   return prisma.room.findFirst({
     where: { id: roomId },
-    include: { ...WITH_MEMBERS, messages: true },
+    include: {
+      ...WITH_MEMBERS,
+      messages: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+      },
+    },
   });
 };
 

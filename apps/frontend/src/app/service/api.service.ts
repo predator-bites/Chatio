@@ -22,6 +22,10 @@ export interface Message {
   userId: string;
   roomId: string | null;
   createdAt: string;
+  user?: {
+    id: string;
+    username: string;
+  };
 }
 
 const http = axios.create({

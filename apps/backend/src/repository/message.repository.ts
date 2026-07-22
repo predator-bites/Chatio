@@ -1,12 +1,26 @@
 import { MessageUncheckedCreateInput } from '../../generated/prisma/models';
 import prisma from '../db';
 
+const WITH_USER = {
+  user: {
+    select: {
+      id: true,
+      username: true,
+    },
+  },
+} as const;
+
 const getMessages = () => {
-  return prisma.message.findMany();
+  return prisma.message.findMany({
+    include: WITH_USER,
+  });
 };
 
 const getRoomMessages = (roomId: string) => {
-  return prisma.message.findMany({ where: { roomId } });
+  return prisma.message.findMany({
+    where: { roomId },
+    include: WITH_USER,
+  });
 };
 
 const create = (data: MessageUncheckedCreateInput) => {
@@ -14,6 +28,7 @@ const create = (data: MessageUncheckedCreateInput) => {
     data: {
       ...data,
     },
+    include: WITH_USER,
   });
 };
 

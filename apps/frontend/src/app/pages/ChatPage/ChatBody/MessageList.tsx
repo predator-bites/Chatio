@@ -37,7 +37,9 @@ function buildViewModels(
       isMe,
       isFirstInGroup: !prevMsg || prevMsg.userId !== msg.userId,
       isLastInGroup: !nextMsg || nextMsg.userId !== msg.userId,
-      senderName: isMe ? 'You' : (usersMap.get(msg.userId) ?? 'Unknown'),
+      senderName: isMe
+        ? 'You'
+        : (msg.user?.username ?? usersMap.get(msg.userId) ?? 'Unknown'),
       avatarHue: toHue(msg.userId),
       formattedTime: formatTime(msg.createdAt),
     };
