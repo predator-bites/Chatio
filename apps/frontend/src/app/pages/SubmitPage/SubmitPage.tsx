@@ -11,6 +11,10 @@ export const SubmitPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
 
+  const handleGoToLogin = () => {
+    navigate('/login');
+  };
+
   const handleVerify = async () => {
     try {
       if (!id || !submitUrl) {
@@ -35,6 +39,29 @@ export const SubmitPage: React.FC = () => {
     }
   };
 
+  const SubmitPageButton = !isVerified ? (
+    <Button
+      id="btn-verify-email"
+      onClick={handleVerify}
+      size="lg"
+      fullWidth
+      isLoading={isLoading}
+      className="mt-1"
+    >
+      {isLoading ? 'Verifying…' : 'Verify Email'}
+    </Button>
+  ) : (
+    <Button
+      id="btn-go-to-login"
+      onClick={handleGoToLogin}
+      size="lg"
+      fullWidth
+      className="mt-1"
+    >
+      Go to Sign in
+    </Button>
+  );
+
   return (
     <div className="min-h-screen w-full bg-primary-50 flex flex-col items-center justify-between px-5 pt-14 pb-10 overflow-hidden relative">
       <DecorativeBlobs />
@@ -53,28 +80,7 @@ export const SubmitPage: React.FC = () => {
           </p>
         </div>
 
-        {!isVerified ? (
-          <Button
-            id="btn-verify-email"
-            onClick={handleVerify}
-            size="lg"
-            fullWidth
-            isLoading={isLoading}
-            className="mt-1"
-          >
-            {isLoading ? 'Verifying…' : 'Verify Email'}
-          </Button>
-        ) : (
-          <Button
-            id="btn-go-to-login"
-            onClick={() => navigate('/login')}
-            size="lg"
-            fullWidth
-            className="mt-1"
-          >
-            Go to Sign in
-          </Button>
-        )}
+        {SubmitPageButton}
       </main>
 
       <footer className="text-sm text-primary-700/50 text-center">

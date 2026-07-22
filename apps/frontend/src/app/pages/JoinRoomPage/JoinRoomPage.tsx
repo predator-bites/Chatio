@@ -26,6 +26,10 @@ export const JoinRoomPage: React.FC = () => {
     title: string;
   } | null>(null);
 
+  const handleCancel = () => {
+    navigate('/chat');
+  };
+
   useEffect(() => {
     const storedUser = localStorage.getItem('chatio_user');
 
@@ -132,7 +136,7 @@ export const JoinRoomPage: React.FC = () => {
           <Button
             id="btn-cancel-join"
             variant="ghost"
-            onClick={() => navigate('/chat')}
+            onClick={handleCancel}
             disabled={isJoining}
             size="md"
             fullWidth

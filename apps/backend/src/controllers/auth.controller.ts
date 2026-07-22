@@ -51,14 +51,6 @@ const logout = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-const getGoogleUrl = (req: Request, res: Response) => {
-  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res);
-};
-
-const googleCallback = (req: Request, res: Response) => {
-  res.redirect(process.env.GOOGLE_SUCCESS_REDIRECT);
-};
-
 const currentUser = (req: Request, res: Response) => {
   res.status(200).send(sanitiseUser(req.user));
 };
@@ -66,7 +58,5 @@ const currentUser = (req: Request, res: Response) => {
 export default {
   login,
   logout,
-  getGoogleUrl,
-  googleCallback,
   currentUser,
 };

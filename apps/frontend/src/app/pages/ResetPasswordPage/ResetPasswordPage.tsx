@@ -7,6 +7,7 @@ import {
   Icon,
   DecorativeBlobs,
   Header,
+  ShowPasswordButton,
 } from '../../components';
 import { userApi } from '../../service/api.service';
 import { useToast } from '../../hooks/useToast';
@@ -22,6 +23,17 @@ export const ResetPasswordPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ password?: string }>({});
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (errors.password) {
+      setErrors((prev) => ({ ...prev, password: undefined }));
+    }
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const validate = () => {
     const next: typeof errors = {};
@@ -100,28 +112,14 @@ export const ResetPasswordPage: React.FC = () => {
             placeholder="••••••••"
             autoComplete="new-password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-
-              if (errors.password)
-                setErrors((p) => ({ ...p, password: undefined }));
-            }}
+            onChange={handlePasswordChange}
             leftIcon={<Icon iconSlug="lock" className="w-[18px] h-[18px]" />}
             error={errors.password}
             rightAction={
-              <button
-                type="button"
-                id="btn-toggle-password"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                onClick={() => setShowPassword((v) => !v)}
-                className="text-secondary/50 p-1 active:text-secondary transition-colors duration-150"
-              >
-                {showPassword ? (
-                  <Icon iconSlug="eyeOff" className="w-[18px] h-[18px]" />
-                ) : (
-                  <Icon iconSlug="eye" className="w-[18px] h-[18px]" />
-                )}
-              </button>
+              <ShowPasswordButton
+                showPassword={showPassword}
+                onToggle={handleTogglePassword}
+              />
             }
           />
 

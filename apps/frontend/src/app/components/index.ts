@@ -8,3 +8,4 @@ export { ToastProvider } from './ToastProvider';
 export { Loader } from './Loader';
 export { DecorativeBlobs } from './DecorativeBlobs';
 export { Header } from './Header';
+export { ShowPasswordButton } from './ShowPasswordButton';

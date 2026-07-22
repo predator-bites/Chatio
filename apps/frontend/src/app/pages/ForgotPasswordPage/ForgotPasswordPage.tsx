@@ -16,6 +16,13 @@ export const ForgotPasswordPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string }>({});
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (errors.email) {
+      setErrors((prev) => ({ ...prev, email: undefined }));
+    }
+  };
+
   const validate = () => {
     const next: typeof errors = {};
 
@@ -83,11 +90,7 @@ export const ForgotPasswordPage: React.FC = () => {
             placeholder="you@example.com"
             autoComplete="email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-
-              if (errors.email) setErrors((p) => ({ ...p, email: undefined }));
-            }}
+            onChange={handleEmailChange}
             leftIcon={<Icon iconSlug="mail" className="w-[18px] h-[18px]" />}
             error={errors.email}
           />

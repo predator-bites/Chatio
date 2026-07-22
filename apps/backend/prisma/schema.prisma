@@ -54,7 +54,6 @@ model User {
   password String?
   submitUrl String?
   passwordChangeUrl String?
-  auth_provider String @default("local")
 
   @@map("Users")
   messages Message[]

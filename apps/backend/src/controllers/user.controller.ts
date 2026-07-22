@@ -103,10 +103,6 @@ const changePassword = async (req: ExpressRequest, res: ExpressResponse) => {
     throw ApiError.badRequest('User not found');
   }
 
-  if (user.auth_provider !== 'local') {
-    throw ApiError.badRequest('Login with your google accout');
-  }
-
   if (user.passwordChangeUrl !== passwordChangeUrl) {
     throw ApiError.badRequest('Wrong password change url');
   }
@@ -138,10 +134,6 @@ const generatePasswordResetLink = async (
 
   if (!user) {
     throw ApiError.badRequest('User not found');
-  }
-
-  if (user.auth_provider !== 'local') {
-    throw ApiError.badRequest('Login with your google account');
   }
 
   const passwordChangeUrl = uuidv4();
