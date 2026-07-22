@@ -1,98 +1,223 @@
-# Chatio
+# 💬 Chatio — Real-Time Group Chat Application
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+**Chatio** is a full-stack, real-time group messaging web application built as an **Nx Monorepo**. It features instant WebSocket messaging, online/offline presence tracking, room invitation links, typing indicators, and flexible authentication (email/password + Google OAuth 2.0).
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+---
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## 🚀 Tech Stack
 
-## Run tasks
+### **Frontend** (Deployed to **Vercel**)
+- **Framework**: React 19 + TypeScript + Vite 8
+- **Styling**: Tailwind CSS v4
+- **Routing**: React Router DOM v6
+- **Real-Time Communication**: Socket.IO Client 4.x
+- **HTTP Client**: Axios with credentials & unified response interceptors
 
-To run tasks with Nx use:
+### **Backend** (Deployed to **Render**)
+- **Server**: Node.js + Express 5.x
+- **Real-Time Engine**: Socket.IO 4.x (HTTP + WebSocket server integration)
+- **Database & ORM**: PostgreSQL + Prisma ORM 7.x
+- **Authentication**: Passport.js (Local & Google OAuth 2.0) + Express Session (`@quixo3/prisma-session-store`)
+- **Email Service**: Nodemailer (SMTP verification & password resets)
 
-```sh
-npx nx <target> <project-name>
+### **Monorepo & Tooling**
+- **Monorepo Manager**: Nx 23.x Workspace
+- **Linting & Formatting**: ESLint 9 (Flat Config) + Prettier 3
+- **Shared Libraries**: `@chatio/shared-types`
+
+---
+
+## 📐 Architecture Overview
+
+```
+                        ┌───────────────────────────────┐
+                        │      Client (Browser)         │
+                        └───────────────┬───────────────┘
+                                        │
+                    ┌───────────────────┴───────────────────┐
+                    │                                       │
+            HTTPS REST Requests                   WebSocket Connections
+                    │                                       │
+                    ▼                                       ▼
+        ┌───────────────────────┐               ┌───────────────────────┐
+        │   Vercel (Frontend)   │               │   Render (Backend)    │
+        │    React 19 + Vite    │               │  Express + Socket.IO  │
+        └───────────────────────┘               └───────────┬───────────┘
+                                                            │
+                                                     Prisma ORM (SQL)
+                                                            │
+                                                            ▼
+                                                ┌───────────────────────┐
+                                                │  PostgreSQL Database  │
+                                                │ (Neon / Render / etc) │
+                                                └───────────────────────┘
 ```
 
-For example:
+---
 
-```sh
-npx nx build myproject
+## 🔑 Environment Variables Configuration
+
+### **Frontend Environment (`apps/frontend/.env`)**
+Create `apps/frontend/.env` (or configure in Vercel Environment Variables):
+
+```env
+SERVER_URL=https://your-backend-service.onrender.com
+VITE_API_URL=https://your-backend-service.onrender.com
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+### **Backend Environment (`apps/backend/.env`)**
+Create `apps/backend/.env` (or configure in Render Environment Variables):
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```env
+PORT=3333
+MODE=production
 
-## Add new projects
+# Database Connection (PostgreSQL)
+DATABASE_URL="postgresql://user:password@ep-example-123456.us-east-1.aws.neon.tech/chatio?sslmode=require"
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+# Session Security
+SESSION_SECRET="your-super-secret-random-key"
+SALT_OF_ROUNDS=10
 
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
+# CORS & Origins (Your Vercel deployment URL)
+ORIGIN="https://your-frontend.vercel.app"
+CLIENT_ORIGIN="https://your-frontend.vercel.app"
 
-```sh
-npx nx add @nx/react
+# Google OAuth 2.0 Credentials
+GOOGLE_CLIENT_ID="your-google-client-id.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+GOOGLE_CALLBACK_URL="https://your-backend-service.onrender.com/auth/google/callback"
+
+# SMTP Mailer Settings
+SMTP_SERVER="smtp.gmail.com"
+SMTP_PORT=465
+SMTP_USER="your-email@gmail.com"
+SMTP_PASSWORD="your-app-password"
 ```
 
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
+---
 
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
+## 🛠 Local Development Setup
 
-# Generate a library
-npx nx g @nx/react:lib some-lib
+### 1. Prerequisites
+- **Node.js**: `>= 18.x`
+- **npm**: `>= 9.x`
+- **PostgreSQL**: Local instance or cloud database (Neon, Supabase, Render PostgreSQL)
+
+### 2. Installation
+Clone the repository and install workspace dependencies:
+
+```bash
+git clone https://github.com/your-username/chatio.git
+cd chatio
+npm install
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+### 3. Database Migration & Prisma Generation
+Configure your local `DATABASE_URL` in `apps/backend/.env` and sync the schema:
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```bash
+# Generate Prisma Client
+npx prisma generate --schema=apps/backend/prisma/schema.prisma
 
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
+# Push schema to database
+npx prisma db push --schema=apps/backend/prisma/schema.prisma
 ```
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+### 4. Running Locally
+Run both backend and frontend concurrently with Nx:
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```bash
+# Run backend (listening on http://localhost:3333)
+npx nx serve backend
 
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
+# Run frontend (listening on http://localhost:4200)
+npx nx serve frontend
 ```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+---
 
-## Install Nx Console
+## 🌐 Deployment Guide: Vercel (Frontend) + Render (Backend)
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+### **Part 1: Deploy Database (PostgreSQL)**
+1. Create a free PostgreSQL instance on [Neon](https://neon.tech), [Supabase](https://supabase.com), or [Render PostgreSQL](https://render.com).
+2. Copy the connection string (`DATABASE_URL`) with `?sslmode=require`.
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+---
 
-## Useful links
+### **Part 2: Deploy Backend to Render**
 
-Learn more:
+1. Sign in to [Render](https://render.com) and click **New +** → **Web Service**.
+2. Connect your Git repository.
+3. Configure the Web Service settings:
+   - **Name**: `chatio-backend`
+   - **Environment**: `Node`
+   - **Region**: Select closest to your users
+   - **Branch**: `main`
+   - **Root Directory**: `.` (leave blank or `.`)
+   - **Build Command**:
+     ```bash
+     npm install && npx prisma generate --schema=apps/backend/prisma/schema.prisma && npx nx build backend
+     ```
+   - **Start Command**:
+     ```bash
+     node dist/apps/backend/main.js
+     ```
+4. Add all **Backend Environment Variables** under **Environment Settings**:
+   - `DATABASE_URL`
+   - `SESSION_SECRET`
+   - `ORIGIN` = `https://your-app.vercel.app`
+   - `CLIENT_ORIGIN` = `https://your-app.vercel.app`
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+   - `GOOGLE_CALLBACK_URL` = `https://chatio-backend.onrender.com/auth/google/callback`
+   - `SMTP_SERVER`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`
+   - `SALT_OF_ROUNDS` = `10`
+5. Click **Create Web Service**. Render will build and deploy the Node.js WebSocket API.
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+---
 
-And join the Nx community:
+### **Part 3: Deploy Frontend to Vercel**
 
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+1. Sign in to [Vercel](https://vercel.com) and click **Add New** → **Project**.
+2. Import your `chatio` Git repository.
+3. Configure Project Settings:
+   - **Framework Preset**: `Vite`
+   - **Root Directory**: `./`
+   - **Build Command**: `npx nx build frontend`
+   - **Output Directory**: `dist/apps/frontend`
+4. Add **Environment Variables**:
+   - `SERVER_URL` = `https://chatio-backend.onrender.com` (Your Render URL)
+5. Click **Deploy**. Vercel will build and serve your SPA on a high-speed CDN.
+
+---
+
+### **Part 4: Google OAuth Authorization Callback Setup**
+In your [Google Cloud Console](https://console.cloud.google.com/apis/credentials):
+1. Go to **Credentials** → Select your OAuth 2.0 Client ID.
+2. Add under **Authorized JavaScript origins**:
+   - `https://your-app.vercel.app`
+3. Add under **Authorized redirect URIs**:
+   - `https://chatio-backend.onrender.com/auth/google/callback`
+
+---
+
+## 🧪 Code Formatting & Verification
+
+To maintain code readability, the workspace follows strict statement padding rules and formatting standards:
+
+```bash
+# Run Prettier code formatting
+npm run format
+
+# Verify formatting without writing changes
+npm run format:check
+
+# Run ESLint across monorepo
+npx eslint .
+```
+
+---
+
+## 📜 License
+This project is licensed under the **MIT License**.

@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "build:frontend": "npx nx build frontend",
+    "build:backend": "npx prisma generate --schema=apps/backend/prisma/schema.prisma && npx nx build backend",
+    "start:backend": "node dist/apps/backend/main.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
