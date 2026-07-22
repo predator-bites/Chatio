@@ -61,7 +61,19 @@ export const ChatPage: React.FC = () => {
   const onlineUserIds = useOnlineUsers(user?.id ?? null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleReconnect = useCallback(async () => {
+  const handleReconnectRef = useRef<() => void>(undefined);
+
+  const { messages, setMessages, typingUsers, sendTyping, connected } =
+    useRoomMessages(
+      activeRoom?.id || null,
+      user?.id || null,
+      user?.username || null,
+      () => {
+        handleReconnectRef.current?.();
+      },
+    );
+
+  handleReconnectRef.current = async () => {
     if (!activeRoom || !user) return;
 
     try {
@@ -78,15 +90,7 @@ export const ChatPage: React.FC = () => {
     } catch {
       // silent catch during reconnect
     }
-  }, [activeRoom, user, setMessages, showToast]);
-
-  const { messages, setMessages, typingUsers, sendTyping, connected } =
-    useRoomMessages(
-      activeRoom?.id || null,
-      user?.id || null,
-      user?.username || null,
-      handleReconnect,
-    );
+  };
 
   useEffect(() => {
     const fetchUser = async () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Message } from '../service/api.service';
 import { useSocket } from './useSocket';
 
@@ -18,15 +18,21 @@ export function useRoomMessages(
   const [messages, setMessages] = useState<Message[]>([]);
   const [typingUsers, setTypingUsers] = useState<TypingUser[]>([]);
 
+  const onReconnectRef = useRef(onReconnect);
+  onReconnectRef.current = onReconnect;
+
+  const roomIdRef = useRef(roomId);
+  roomIdRef.current = roomId;
+
   useEffect(() => {
     if (!socket) return;
 
     const handleConnect = () => {
-      if (roomId) {
-        socket.emit('join_room', { roomId });
+      if (roomIdRef.current) {
+        socket.emit('join_room', { roomId: roomIdRef.current });
       }
-      if (onReconnect) {
-        onReconnect();
+      if (onReconnectRef.current) {
+        onReconnectRef.current();
       }
     };
 
@@ -55,7 +61,7 @@ export function useRoomMessages(
       socket.off('new_message', handleNewMessage);
       socket.off('user_typing', handleUserTyping);
     };
-  }, [socket, roomId, onReconnect]);
+  }, [socket]);
 
   useEffect(() => {
     if (!socket || !roomId) return;
