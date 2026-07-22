@@ -69,21 +69,25 @@ export const ChatPage: React.FC = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const storedUser = localStorage.getItem('chatio_user');
+      try {
+        const storedUser = localStorage.getItem('chatio_user');
 
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+
+        const loggedInUser = await authApi.currentUser();
+
+        if (!loggedInUser) {
+          navigate('/login');
+          return;
+        }
+
+        setUser(loggedInUser);
+        localStorage.setItem('chatio_user', JSON.stringify(loggedInUser));
+      } catch {
+        navigate('/');
       }
-
-      const loggedInUser = await authApi.currentUser();
-
-      if (!loggedInUser) {
-        navigate('/login');
-        return;
-      }
-
-      setUser(loggedInUser);
-      localStorage.setItem('chatio_user', JSON.stringify(loggedInUser));
     };
 
     fetchUser();
