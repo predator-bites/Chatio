@@ -25,11 +25,8 @@ export default function createServer() {
 
   const app = express();
 
-  app.set('trust proxy', 1);
 
-  const isProd =
-    process.env.NODE_ENV === 'production' ||
-    process.env.MODE === 'production';
+  const isProd = process.env.NODE_ENV === 'production'
 
   app.use(express.json());
   app.use(
@@ -39,6 +36,9 @@ export default function createServer() {
     }),
   );
   app.use(cookieParser(secret));
+
+  app.set('trust proxy', 1);
+
 
   app.use(
     session({
