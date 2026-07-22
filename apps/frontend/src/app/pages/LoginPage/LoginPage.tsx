@@ -88,7 +88,7 @@ export const LoginPage: React.FC = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_SERVER_URL}/auth/google`;
+    window.location.href = `${import.meta.env.SERVER_URL}/auth/google`;
   };
 
   return (
