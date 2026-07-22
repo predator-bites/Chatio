@@ -65,7 +65,7 @@
 Create `apps/frontend/.env` (or configure in Vercel Environment Variables):
 
 ```env
-SERVER_URL=https://your-backend-service.onrender.com
+VITE_SERVER_URL=https://your-backend-service.onrender.com
 VITE_API_URL=https://your-backend-service.onrender.com
 ```
 
@@ -197,7 +197,7 @@ npx nx serve frontend
    - **Build Command**: `npx nx build frontend`
    - **Output Directory**: `dist/apps/frontend`
 4. Add **Environment Variables**:
-   - `SERVER_URL` = `https://chatio-backend.onrender.com` (Your Render URL)
+   - `VITE_SERVER_URL` = `https://chatio-backend.onrender.com` (Your Render URL)
 5. Click **Deploy**. Vercel will build and serve your SPA on a high-speed CDN.
 
 ---

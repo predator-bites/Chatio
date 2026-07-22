@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Message } from '../service/api.service';
 
-const BACKEND_URL = import.meta.env.SERVER_URL;
+const BACKEND_URL = import.meta.env.VITE_SERVER_URL;
 
 export interface TypingUser {
   userId: string;
