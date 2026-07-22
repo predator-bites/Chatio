@@ -27,6 +27,10 @@ export default function createServer() {
 
   app.set('trust proxy', 1);
 
+  const isProd =
+    process.env.NODE_ENV === 'production' ||
+    process.env.MODE === 'production';
+
   app.use(express.json());
   app.use(
     cors({
@@ -48,8 +52,8 @@ export default function createServer() {
       }),
       cookie: {
         httpOnly: true,
-        secure: process.env.MODE === 'production',
-        sameSite: process.env.MODE === 'production' ? 'none' : 'lax',
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
         maxAge: ms('7d'),
       },
     }),

@@ -12,7 +12,7 @@ router.get('/google', authController.getGoogleUrl);
 router.get(
   '/google/callback',
   passport.authenticate('google', {
-    failureRedirect: process.env.GOOGLE_FAILTURE_REDIRECT,
+    failureRedirect: process.env.GOOGLE_FAITURE_REDIRECT,
     scope: ['profile', 'email'],
   }),
   authController.googleCallback,
