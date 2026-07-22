@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Message {
+  id String @id @default(dbgenerated("gen_random_uuid()"))
+  userId String
+  text String
+  roomId String?
+  createdAt DateTime @default(now())
+
+  @@map("Messages")
+  room Room? @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Room {
+  id        String       @id @default(dbgenerated("gen_random_uuid()"))
+  userId    String?
+  title     String
+  inviteUrl String?
+  createdAt DateTime     @default(now())
+
+  @@map("Rooms")
+  messages  Message[]
+  owner     User?        @relation("RoomOwner", fields: [userId], references: [id])
+  members   RoomMember[]
+}
+model RoomMember {
+  roomId    String
+  userId    String
+  joinedAt  DateTime @default(now())
+  @@id([roomId, userId])
+  room      Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("RoomMembers")
+}
+
+model User {
+  id String @id @default(dbgenerated("gen_random_uuid()"))
+  username String @unique
+  email String @unique
+  password String?
+  submitUrl String?
+  passwordChangeUrl String?
+  auth_provider String @default("local")
+
+  @@map("Users")
+  messages Message[]
+  rooms RoomMember[]
+  ownedRooms Room[] @relation("RoomOwner")
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
