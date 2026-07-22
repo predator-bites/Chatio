@@ -61,7 +61,10 @@ export const authApi = {
     return request<void>('/auth/google', { method: 'GET' });
   },
   currentUser(): Promise<User> {
-    return request<User>('/auth/currentUser', { method: 'GET' });
+    return request<User>('/auth/currentUser', {
+      method: 'GET',
+      withCredentials: true,
+    });
   },
 };
 
