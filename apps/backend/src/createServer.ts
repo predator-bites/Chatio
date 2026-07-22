@@ -25,9 +25,6 @@ export default function createServer() {
 
   const app = express();
 
-
-  const isProd = process.env.NODE_ENV === 'production'
-
   app.use(express.json());
   app.use(
     cors({
@@ -38,7 +35,6 @@ export default function createServer() {
   app.use(cookieParser(secret));
 
   app.set('trust proxy', 1);
-
 
   app.use(
     session({
@@ -52,8 +48,8 @@ export default function createServer() {
       }),
       cookie: {
         httpOnly: true,
-        secure: isProd,
-        sameSite: isProd ? 'none' : 'lax',
+        secure: true,
+        sameSite: "none",
         maxAge: ms('7d'),
       },
     }),
