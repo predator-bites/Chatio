@@ -5,7 +5,6 @@ import ms from 'ms';
 import prisma from '../db';
 
 const secret = process.env.SESSION_SECRET;
-const isProd = process.env.NODE_ENV === 'production';
 
 const SessionMiddleware = session({
   secret,
@@ -18,8 +17,8 @@ const SessionMiddleware = session({
   }),
   cookie: {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'none' : 'lax',
+    secure: true,
+    sameSite: 'none',
     maxAge: ms('7d'),
   },
 });
