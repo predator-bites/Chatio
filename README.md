@@ -7,6 +7,7 @@
 ## 🚀 Tech Stack
 
 ### **Frontend** (Deployed to **Vercel**)
+
 - **Framework**: React 19 + TypeScript + Vite 8
 - **Styling**: Tailwind CSS v4
 - **Routing**: React Router DOM v6
@@ -14,6 +15,7 @@
 - **HTTP Client**: Axios with credentials & unified response interceptors
 
 ### **Backend** (Deployed to **Render**)
+
 - **Server**: Node.js + Express 5.x
 - **Real-Time Engine**: Socket.IO 4.x (HTTP + WebSocket server integration)
 - **Database & ORM**: PostgreSQL + Prisma ORM 7.x
@@ -21,6 +23,7 @@
 - **Email Service**: Nodemailer (SMTP verification & password resets)
 
 ### **Monorepo & Tooling**
+
 - **Monorepo Manager**: Nx 23.x Workspace
 - **Linting & Formatting**: ESLint 9 (Flat Config) + Prettier 3
 - **Shared Libraries**: `@chatio/shared-types`
@@ -58,6 +61,7 @@
 ## 🔑 Environment Variables Configuration
 
 ### **Frontend Environment (`apps/frontend/.env`)**
+
 Create `apps/frontend/.env` (or configure in Vercel Environment Variables):
 
 ```env
@@ -66,6 +70,7 @@ VITE_API_URL=https://your-backend-service.onrender.com
 ```
 
 ### **Backend Environment (`apps/backend/.env`)**
+
 Create `apps/backend/.env` (or configure in Render Environment Variables):
 
 ```env
@@ -100,11 +105,13 @@ SMTP_PASSWORD="your-app-password"
 ## 🛠 Local Development Setup
 
 ### 1. Prerequisites
+
 - **Node.js**: `>= 18.x`
 - **npm**: `>= 9.x`
 - **PostgreSQL**: Local instance or cloud database (Neon, Supabase, Render PostgreSQL)
 
 ### 2. Installation
+
 Clone the repository and install workspace dependencies:
 
 ```bash
@@ -114,6 +121,7 @@ npm install
 ```
 
 ### 3. Database Migration & Prisma Generation
+
 Configure your local `DATABASE_URL` in `apps/backend/.env` and sync the schema:
 
 ```bash
@@ -125,6 +133,7 @@ npx prisma db push --schema=apps/backend/prisma/schema.prisma
 ```
 
 ### 4. Running Locally
+
 Run both backend and frontend concurrently with Nx:
 
 ```bash
@@ -140,6 +149,7 @@ npx nx serve frontend
 ## 🌐 Deployment Guide: Vercel (Frontend) + Render (Backend)
 
 ### **Part 1: Deploy Database (PostgreSQL)**
+
 1. Create a free PostgreSQL instance on [Neon](https://neon.tech), [Supabase](https://supabase.com), or [Render PostgreSQL](https://render.com).
 2. Copy the connection string (`DATABASE_URL`) with `?sslmode=require`.
 
@@ -157,7 +167,7 @@ npx nx serve frontend
    - **Root Directory**: `.` (leave blank or `.`)
    - **Build Command**:
      ```bash
-     npm install --include=dev && npx prisma generate --schema=apps/backend/prisma/schema.prisma && npx nx build backend
+     npm install && npx prisma generate --schema=apps/backend/prisma/schema.prisma && npx nx build backend
      ```
    - **Start Command**:
      ```bash
@@ -193,7 +203,9 @@ npx nx serve frontend
 ---
 
 ### **Part 4: Google OAuth Authorization Callback Setup**
+
 In your [Google Cloud Console](https://console.cloud.google.com/apis/credentials):
+
 1. Go to **Credentials** → Select your OAuth 2.0 Client ID.
 2. Add under **Authorized JavaScript origins**:
    - `https://your-app.vercel.app`
@@ -220,4 +232,5 @@ npx eslint .
 ---
 
 ## 📜 License
+
 This project is licensed under the **MIT License**.
