@@ -5,9 +5,10 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
     interface User extends PrismaUser {}
   }
+}
 
+declare module 'passport-local' {
   interface IVerifyOptions {
-    message: string;
-    code: number;
+    code?: number;
   }
 }

@@ -5,6 +5,7 @@ import passport from 'passport';
 import sanitiseUser from '../utils/sanitise';
 import { User } from '../../generated/prisma/client';
 import ApiError from '../utils/ApiError';
+import { IVerifyOptions } from 'passport-local';
 
 const login = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(
