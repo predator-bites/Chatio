@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import authController from '../controllers/auth.controller';
 import passport from 'passport';
+import AuthMiddleware from '../middlewares/AuthMiddleware'
 
 const router = Router();
 
@@ -16,6 +17,6 @@ router.get(
   }),
   authController.googleCallback,
 );
-router.get('/currentUser', authController.currentUser);
+router.get('/currentUser', AuthMiddleware ,authController.currentUser);
 
 export default router;
