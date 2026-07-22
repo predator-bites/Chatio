@@ -2,10 +2,6 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import session from 'express-session';
-import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import prisma from './db';
-import ms from 'ms';
 import messageRouter from './routers/message.router';
 import roomRouter from './routers/room.router';
 import userRouter from './routers/user.router';
@@ -14,13 +10,13 @@ import ErrorMiddleware from './middlewares/ErrorMiddleware';
 import initPassport from './passport';
 import passport from 'passport';
 import SessionMiddleware from './middlewares/SessionMiddleware';
-import { rateLimit } from 'express-rate-limiter';
+import rateLimit from 'express-rate-limit';
+import ms from 'ms';
 
 export default function createServer() {
   const app = express();
 
   app.use(express.json());
-
   app.use(
     cors({
       origin: process.env.ORIGIN,
@@ -28,15 +24,16 @@ export default function createServer() {
     }),
   );
 
-  app.use(rateLimit({
-    windowMs: ms('1m'),
-    limit: 200,
-    message: 'Too many request'
-  }))
-
   app.use(cookieParser());
-
   app.set('trust proxy', 1);
+
+  app.use(rateLimit({
+  windowMs: ms('1m'),
+  limit: 200,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' },
+}));
 
   app.use(SessionMiddleware);
 

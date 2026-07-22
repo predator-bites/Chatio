@@ -61,6 +61,10 @@ const submit = async (req: ExpressRequest, res: ExpressResponse) => {
 
   const user = await userRepository.getById(id);
 
+  if (!user) {
+    throw ApiError.notFound('User not found');
+  }
+
   if (!user.submitUrl) {
     res.sendStatus(200);
     return;
