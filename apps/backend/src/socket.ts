@@ -6,7 +6,7 @@ let io: Server;
 export function initIO(httpServer: HttpServer): Server {
   io = new Server(httpServer, {
     cors: {
-      origin: process.env.CLIENT_ORIGIN || 'http://localhost:4200',
+      origin: process.env.ORIGIN,
       credentials: true,
     },
   });

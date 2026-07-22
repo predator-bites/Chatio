@@ -47,6 +47,7 @@ export default function createServer() {
       cookie: {
         httpOnly: true,
         secure: process.env.MODE === 'production',
+        sameSite: process.env.MODE === 'production' ? 'none' : 'lax',
         maxAge: ms('7d'),
       },
     }),
