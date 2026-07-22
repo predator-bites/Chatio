@@ -85,6 +85,10 @@ const getMessages = async (req: ExpressRequest, res: ExpressResponse) => {
     throw ApiError.notFound('Room not found');
   }
 
+  if (!room.members.some(member => member.userId === req.user.id )) {
+    throw ApiError.unauthorized('User not part of the group')
+  }
+
   res.status(200).send(room.messages);
 };
 

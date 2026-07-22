@@ -13,16 +13,9 @@ import authRouter from './routers/auth.router';
 import ErrorMiddleware from './middlewares/ErrorMiddleware';
 import initPassport from './passport';
 import passport from 'passport';
+import SessionMiddleware from './middlewares/SessionMiddleware';
 
 export default function createServer() {
-  const secret = process.env.SESSION_SECRET;
-
-  if (!secret) {
-    throw new Error(
-      'FATAL: SESSION_SECRET environment variable is required but missing.',
-    );
-  }
-
   const app = express();
 
   app.use(express.json());
@@ -32,28 +25,11 @@ export default function createServer() {
       credentials: true,
     }),
   );
-  app.use(cookieParser(secret));
+  app.use(cookieParser());
 
   app.set('trust proxy', 1);
 
-  app.use(
-    session({
-      secret,
-      resave: false,
-      saveUninitialized: false,
-      store: new PrismaSessionStore(prisma, {
-        checkPeriod: ms('2m'),
-        dbRecordIdIsSessionId: true,
-        dbRecordIdFunction: undefined,
-      }),
-      cookie: {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: ms('7d'),
-      },
-    }),
-  );
+  app.use(SessionMiddleware);
 
   initPassport();
   app.use(passport.initialize());

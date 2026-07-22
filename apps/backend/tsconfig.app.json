@@ -3,7 +3,12 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "commonjs",
-    "types": ["node", "express", "./src/types/passport.d.ts"]
+    "types": [
+      "node",
+      "express",
+      "./src/types/passport.d.ts",
+      "./src/types/socket.d.ts"
+    ]
   },
   "include": ["src/**/*.ts"]
 }
