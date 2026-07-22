@@ -5,6 +5,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { ToastProvider } from './components/ToastProvider';
+import { SocketProvider } from './hooks/useSocket';
 import { lazy, Suspense } from 'react';
 import { Loader } from './components';
 
@@ -24,27 +25,29 @@ const JoinRoomPage = lazy(() => import('./pages/JoinRoomPage/JoinRoomPage'));
 export function App() {
   return (
     <ToastProvider>
-      <Router>
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            <Route path="/" element={<HelloPage />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route
-              path="/room/join/:roomId/:inviteUrl"
-              element={<JoinRoomPage />}
-            />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/user/:id/:submitUrl" element={<SubmitPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route
-              path="/user/reset/:id/:passwordChangeUrl"
-              element={<ResetPasswordPage />}
-            />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        </Suspense>
-      </Router>
+      <SocketProvider>
+        <Router>
+          <Suspense fallback={<Loader />}>
+            <Routes>
+              <Route path="/" element={<HelloPage />} />
+              <Route path="/chat" element={<ChatPage />} />
+              <Route
+                path="/room/join/:roomId/:inviteUrl"
+                element={<JoinRoomPage />}
+              />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/user/:id/:submitUrl" element={<SubmitPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route
+                path="/user/reset/:id/:passwordChangeUrl"
+                element={<ResetPasswordPage />}
+              />
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </SocketProvider>
     </ToastProvider>
   );
 }

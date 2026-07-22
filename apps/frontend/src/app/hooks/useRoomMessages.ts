@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useEffect, useState } from 'react';
 import { Message } from '../service/api.service';
-
-const BACKEND_URL = import.meta.env.VITE_SERVER_URL;
+import { useSocket } from './useSocket';
 
 export interface TypingUser {
   userId: string;
@@ -15,24 +13,18 @@ export function useRoomMessages(
   userId: string | null,
   username?: string | null,
 ) {
-  const socketRef = useRef<Socket | null>(null);
-  const [connected, setConnected] = useState(false);
+  const { socket, connected } = useSocket();
   const [messages, setMessages] = useState<Message[]>([]);
   const [typingUsers, setTypingUsers] = useState<TypingUser[]>([]);
 
   useEffect(() => {
-    const socket = io(BACKEND_URL, { withCredentials: true });
+    if (!socket) return;
 
-    socketRef.current = socket;
-
-    socket.on('connect', () => setConnected(true));
-    socket.on('disconnect', () => setConnected(false));
-
-    socket.on('new_message', (msg: Message) => {
+    const handleNewMessage = (msg: Message) => {
       setMessages((prev) => [...prev, msg]);
-    });
+    };
 
-    socket.on('user_typing', (data: TypingUser) => {
+    const handleUserTyping = (data: TypingUser) => {
       setTypingUsers((prev) =>
         prev.some((u) => u.userId === data.userId) ? prev : [...prev, data],
       );
@@ -40,17 +32,18 @@ export function useRoomMessages(
       setTimeout(() => {
         setTypingUsers((prev) => prev.filter((u) => u.userId !== data.userId));
       }, 2000);
-    });
+    };
+
+    socket.on('new_message', handleNewMessage);
+    socket.on('user_typing', handleUserTyping);
 
     return () => {
-      socket.disconnect();
-      socketRef.current = null;
+      socket.off('new_message', handleNewMessage);
+      socket.off('user_typing', handleUserTyping);
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
-    const socket = socketRef.current;
-
     if (!socket || !roomId) return;
 
     socket.emit('join_room', { roomId });
@@ -60,12 +53,12 @@ export function useRoomMessages(
       setMessages([]);
       setTypingUsers([]);
     };
-  }, [roomId]);
+  }, [socket, roomId]);
 
   const sendTyping = () => {
-    if (!socketRef.current || !roomId || !userId) return;
+    if (!socket || !roomId || !userId) return;
 
-    socketRef.current.emit('typing', { roomId, userId, username });
+    socket.emit('typing', { roomId, userId, username });
   };
 
   return { messages, setMessages, typingUsers, connected, sendTyping };
