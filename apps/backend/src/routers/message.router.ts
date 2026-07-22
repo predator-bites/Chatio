@@ -5,7 +5,7 @@ import AuthMiddleware from '../middlewares/AuthMiddleware';
 
 const router = Router();
 
-router.get('/', AuthMiddleware, catchAsync(messageControllers.getMessages));
+router.get('/', AuthMiddleware, catchAsync(messageControllers.getGeneralRoomMessages));
 router.post('/', AuthMiddleware, catchAsync(messageControllers.create));
 router.delete('/', AuthMiddleware, catchAsync(messageControllers.deleteMessage));
 

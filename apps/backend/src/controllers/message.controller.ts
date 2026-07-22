@@ -9,8 +9,8 @@ import ApiError from '../utils/ApiError';
 import { MessageUncheckedCreateInput } from '../../generated/prisma/models';
 import { getIO } from '../socket';
 
-const getMessages = async (req: ExpressRequest, res: ExpressResponse) => {
-  const messages = await messageRepository.getMessages();
+const getGeneralRoomMessages = async (req: ExpressRequest, res: ExpressResponse) => {
+  const messages = await messageRepository.getGeneralRoomMessages();
 
   if (!messages) {
     throw ApiError.internalServerError();
@@ -76,7 +76,7 @@ const deleteMessage = async (req: ExpressRequest, res: ExpressResponse) => {
 };
 
 export default {
-  getMessages,
+  getGeneralRoomMessages,
   create,
   deleteMessage,
 };

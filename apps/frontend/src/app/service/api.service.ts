@@ -137,7 +137,7 @@ export const roomApi = {
 };
 
 export const messageApi = {
-  getAll(): Promise<Message[]> {
+  getGeneralRoomMessages(): Promise<Message[]> {
     return request<Message[]>('/message');
   },
 

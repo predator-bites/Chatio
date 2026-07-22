@@ -96,32 +96,20 @@ export const ChatPage: React.FC = () => {
   useEffect(() => {
     if (!user) return;
 
-    let isMounted = true;
-
     const fetchRooms = async () => {
       try {
         setIsLoadingRooms(true);
         const data = await roomApi.getUserRooms();
 
-        if (isMounted) {
-          setRooms([GENERAL_ROOM, ...data]);
-        }
+        setRooms([GENERAL_ROOM, ...data]);
       } catch {
-        if (isMounted) {
-          showToast('Failed to fetch rooms', 'error');
-        }
+        showToast('Failed to fetch rooms', 'error');
       } finally {
-        if (isMounted) {
-          setIsLoadingRooms(false);
-        }
+        setIsLoadingRooms(false);
       }
     };
 
     fetchRooms();
-
-    return () => {
-      isMounted = false;
-    };
   }, [user, showToast]);
 
   useEffect(() => {
@@ -134,7 +122,7 @@ export const ChatPage: React.FC = () => {
       try {
         const data =
           activeRoom.id === 'general'
-            ? (await messageApi.getAll()).filter((m) => !m.roomId)
+            ? await messageApi.getGeneralRoomMessages()
             : await roomApi.getMessages(activeRoom.id);
 
         setMessages(data);
