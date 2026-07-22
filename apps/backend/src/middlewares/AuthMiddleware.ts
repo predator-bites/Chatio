@@ -11,7 +11,7 @@ const AuthMiddleware = (
   next: NextFunction,
 ) => {
   if (!req.isAuthenticated()) {
-    return next(ApiError.unauthorized('User is not logged in'));
+    throw ApiError.unauthorized('User is not logged in');
   }
 
   next();
