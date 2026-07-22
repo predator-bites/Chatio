@@ -8,6 +8,7 @@ import ApiError from '../utils/ApiError';
 import bcrypt from 'bcrypt';
 import mailer from '../services/mailer.service';
 import { v4 as uuidv4 } from 'uuid';
+import sanitiseUser from '../utils/sanitise';
 
 const create = async (req: ExpressRequest, res: ExpressResponse) => {
   const { username, email, password } = req.body;
@@ -44,7 +45,7 @@ const create = async (req: ExpressRequest, res: ExpressResponse) => {
 
   await mailer.sendMail(user.email, htmlText);
 
-  res.status(201).send(user);
+  res.status(201).send(sanitiseUser(user));
 };
 
 const submit = async (req: ExpressRequest, res: ExpressResponse) => {

@@ -11,12 +11,16 @@ const initPassport = () => {
       const user = await userRepository.getByUsername(username);
 
       if (!user) {
-        done('Incorrect username', false);
+        done(null, false, { message: 'Incorrect username' });
         return;
       }
 
+      if (user.auth_provider === 'google') {
+        done(null, false, { message: 'Login with your Google Account'})
+      }
+
       if (!(await bcrypt.compare(password, user.password))) {
-        done('Incorrect password', false);
+        done(null, false, { message: 'Incorrect password' });
         return;
       }
 
@@ -31,6 +35,7 @@ const initPassport = () => {
           clientID: process.env.GOOGLE_CLIENT_ID,
           clientSecret: process.env.GOOGLE_CLIENT_SECRET,
           callbackURL: process.env.GOOGLE_CALLBACK_URL,
+          state: true
       },
       async function (accessToken, refreshToken, profile, done) {
         const email = profile.emails[0].value;

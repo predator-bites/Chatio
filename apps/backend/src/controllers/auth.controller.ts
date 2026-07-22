@@ -12,9 +12,15 @@ const login = (req: Request, res: Response, next: NextFunction) => {
     (
       err: string | null,
       user: Express.User | null,
-      info: { message: string },
+      info: { message: string, code: number } = null,
     ) => {
-      if (err) return next(ApiError.badRequest(err));
+      if (err) {
+        return next(ApiError.badRequest(err));
+      }
+
+      if (info) {
+        return next(new ApiError(info.code, info.message, { error: info.message }))
+      }
 
       if (!user) {
         return next(
