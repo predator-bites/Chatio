@@ -4,7 +4,6 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import userRepository from './repository/user.repository';
 import bcrypt from 'bcrypt';
 import { User } from '../generated/prisma/client';
-import ApiError from './utils/ApiError';
 
 const initPassport = () => {
   passport.use(
@@ -25,12 +24,13 @@ const initPassport = () => {
     }),
   );
 
+  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   passport.use(
     new GoogleStrategy(
       {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.GOOGLE_CALLBACK_URL,
+          clientID: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          callbackURL: process.env.GOOGLE_CALLBACK_URL,
       },
       async function (accessToken, refreshToken, profile, done) {
         const email = profile.emails[0].value;
@@ -52,6 +52,7 @@ const initPassport = () => {
       },
     ),
   );
+  }
 
   passport.serializeUser((user: Express.User, done) => {
     done(null, (user as User).id);
@@ -60,7 +61,7 @@ const initPassport = () => {
   passport.deserializeUser(async (id: string, done) => {
     try {
       done(null, await userRepository.getById(id));
-    } catch (err) {
+    } catch {
       done('Incorrect id', false);
     }
   });

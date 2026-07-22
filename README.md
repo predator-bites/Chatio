@@ -157,7 +157,7 @@ npx nx serve frontend
    - **Root Directory**: `.` (leave blank or `.`)
    - **Build Command**:
      ```bash
-     npm install && npx prisma generate --schema=apps/backend/prisma/schema.prisma && npx nx build backend
+     npm install --include=dev && npx prisma generate --schema=apps/backend/prisma/schema.prisma && npx nx build backend
      ```
    - **Start Command**:
      ```bash

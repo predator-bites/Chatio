@@ -1,4 +1,4 @@
-import 'dotenv';
+import 'dotenv/config';
 import http from 'http';
 import createServer from './createServer';
 import { initIO } from './socket';

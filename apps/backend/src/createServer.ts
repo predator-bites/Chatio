@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -14,20 +15,28 @@ import initPassport from './passport';
 import passport from 'passport';
 
 export default function createServer() {
+  const secret = process.env.SESSION_SECRET;
+
+  if (!secret) {
+    throw new Error(
+      'FATAL: SESSION_SECRET environment variable is required but missing.',
+    );
+  }
+
   const app = express();
 
   app.use(express.json());
   app.use(
     cors({
-      origin: process.env.ORIGIN?.split(',') ?? ['http://localhost:4200'],
+      origin: process.env.ORIGIN,
       credentials: true,
     }),
   );
-  app.use(cookieParser());
+  app.use(cookieParser(secret));
 
   app.use(
     session({
-      secret: process.env.SESSION_SECRET,
+      secret,
       resave: false,
       saveUninitialized: false,
       store: new PrismaSessionStore(prisma, {
