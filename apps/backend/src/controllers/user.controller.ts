@@ -40,7 +40,7 @@ const create = async (req: ExpressRequest, res: ExpressResponse) => {
   <a href='${process.env.ORIGIN}/user/${user.id}/${submitUrl}'>Click here</a>
   `;
 
-    await mailer.sendMail(user.email, htmlText);
+  await mailer.sendMail(user.email, htmlText);
 
   res.status(201).send(sanitiseUser(user));
 };
