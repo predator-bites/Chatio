@@ -1,14 +1,10 @@
 # 💬 Chatio — Real-Time Group Chat Application
 
-🌐 **Live Demo (Frontend)**: [https://chatio-nine.vercel.app/](https://chatio-nine.vercel.app/)
-
----
 
 ## 1. Technologies
 
 ### **Frontend** (Deployed to **Vercel**)
 
-- **URL**: [https://chatio-nine.vercel.app/](https://chatio-nine.vercel.app/)
 - **Framework**: React 19 + TypeScript + Vite 8
 - **Styling**: Tailwind CSS v4
 - **Routing**: React Router DOM v6
@@ -137,7 +133,7 @@ VITE_API_URL=http://localhost:3333
 1. **Install Monorepo Dependencies**:
 
    ```bash
-   npm install
+   npm install --include=dev
    ```
 
 2. **Provision Free Hosted Postgres Database**:
