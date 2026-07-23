@@ -111,6 +111,7 @@ export const ChatPage: React.FC = () => {
         setUser(loggedInUser);
         localStorage.setItem('chatio_user', JSON.stringify(loggedInUser));
       } catch {
+        localStorage.removeItem('chatio_user');
         navigate('/');
       }
     };

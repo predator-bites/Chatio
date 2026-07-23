@@ -25,29 +25,38 @@ const JoinRoomPage = lazy(() => import('./pages/JoinRoomPage/JoinRoomPage'));
 export function App() {
   return (
     <ToastProvider>
-      <SocketProvider>
-        <Router>
-          <Suspense fallback={<Loader />}>
-            <Routes>
-              <Route path="/" element={<HelloPage />} />
-              <Route path="/chat" element={<ChatPage />} />
-              <Route
-                path="/room/join/:roomId/:inviteUrl"
-                element={<JoinRoomPage />}
-              />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/user/:id/:submitUrl" element={<SubmitPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-              <Route
-                path="/user/reset/:id/:passwordChangeUrl"
-                element={<ResetPasswordPage />}
-              />
-              <Route path="*" element={<Navigate to="/login" replace />} />
-            </Routes>
-          </Suspense>
-        </Router>
-      </SocketProvider>
+      <Router>
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            <Route path="/" element={<HelloPage />} />
+            <Route
+              path="/chat"
+              element={
+                <SocketProvider>
+                  <ChatPage />
+                </SocketProvider>
+              }
+            />
+            <Route
+              path="/room/join/:roomId/:inviteUrl"
+              element={
+                <SocketProvider>
+                  <JoinRoomPage />
+                </SocketProvider>
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/user/:id/:submitUrl" element={<SubmitPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route
+              path="/user/reset/:id/:passwordChangeUrl"
+              element={<ResetPasswordPage />}
+            />
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Suspense>
+      </Router>
     </ToastProvider>
   );
 }
