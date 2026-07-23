@@ -7,6 +7,7 @@
 ## 1. Technologies
 
 ### **Frontend** (Deployed to **Vercel**)
+
 - **URL**: [https://chatio-nine.vercel.app/](https://chatio-nine.vercel.app/)
 - **Framework**: React 19 + TypeScript + Vite 8
 - **Styling**: Tailwind CSS v4
@@ -16,6 +17,7 @@
 - **Icons & UI**: Lucide React + custom reusable design system
 
 ### **Backend** (Deployed to **Render**)
+
 - **Server**: Node.js + Express 5.x
 - **Real-Time Engine**: Socket.IO 4.x (HTTP + WebSocket server integration)
 - **Database & ORM**: PostgreSQL + Prisma ORM 7.x
@@ -24,6 +26,7 @@
 - **Email Service**: Nodemailer (SMTP verification & password resets)
 
 ### **Monorepo & Tooling**
+
 - **Monorepo Manager**: Nx 23.x Workspace
 - **Linting & Formatting**: ESLint 9 (Flat Config) + Prettier 3
 

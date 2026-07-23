@@ -27,13 +27,15 @@ export default function createServer() {
   app.use(cookieParser());
   app.set('trust proxy', 1);
 
-  app.use(rateLimit({
-  windowMs: ms('1m'),
-  limit: 200,
-  standardHeaders: 'draft-8',
-  legacyHeaders: false,
-  message: { error: 'Too many requests, please try again later.' },
-}));
+  app.use(
+    rateLimit({
+      windowMs: ms('1m'),
+      limit: 200,
+      standardHeaders: 'draft-8',
+      legacyHeaders: false,
+      message: { error: 'Too many requests, please try again later.' },
+    }),
+  );
 
   app.use(SessionMiddleware);
 

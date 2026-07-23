@@ -26,9 +26,9 @@ export function initIO(httpServer: HttpServer): Server {
     if (socket.request.user) {
       next();
     } else {
-      next(ApiError.unauthorized('User not authorized'))
+      next(ApiError.unauthorized('User not authorized'));
     }
-  })
+  });
 
   return io;
 }

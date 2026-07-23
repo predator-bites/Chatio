@@ -17,10 +17,7 @@ const create = async (req: ExpressRequest, res: ExpressResponse) => {
     throw ApiError.badRequest('Username, email and password is required');
   }
 
-  const hashedPassword = await bcrypt.hash(
-    password,
-    +process.env.SALT_OF_ROUNDS,
-  );
+  const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_OF_ROUNDS));
 
   if (await userRepository.getByUsername(username)) {
     throw ApiError.conflict('Username has already been taken');
@@ -43,7 +40,7 @@ const create = async (req: ExpressRequest, res: ExpressResponse) => {
   <a href='${process.env.ORIGIN}/user/${user.id}/${submitUrl}'>Click here</a>
   `;
 
-  await mailer.sendMail(user.email, htmlText);
+    await mailer.sendMail(user.email, htmlText);
 
   res.status(201).send(sanitiseUser(user));
 };
@@ -140,14 +137,12 @@ const generatePasswordResetLink = async (
 
   await userRepository.change(user.id, { passwordChangeUrl });
 
-  console.log(process.env.ORIGIN);
-
   const htmlText = `
   <h2>Go to the link to change your password</h2>
   <a href='${process.env.ORIGIN}/user/reset/${user.id}/${passwordChangeUrl}'>Click here</a>
   `;
 
-  await mailer.sendMail(email, htmlText, 'Chatio account password change');
+    await mailer.sendMail(email, htmlText, 'Chatio account password change');
 
   res.sendStatus(200);
 };

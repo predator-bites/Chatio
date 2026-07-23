@@ -101,14 +101,6 @@ export const LoginPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex-1 h-px bg-primary-700/10" />
-          <span className="text-xs text-secondary/70 font-medium">
-            Sign in with email
-          </span>
-          <div className="flex-1 h-px bg-primary-700/10" />
-        </div>
-
         <form
           id="form-login"
           onSubmit={handleSubmit}

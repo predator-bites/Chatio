@@ -26,9 +26,9 @@ const getRoomMessages = (roomId: string) => {
 const getGeneralRoomMessages = () => {
   return prisma.message.findMany({
     where: { roomId: null },
-    include: WITH_USER
-  })
-}
+    include: WITH_USER,
+  });
+};
 
 const create = (data: MessageUncheckedCreateInput) => {
   return prisma.message.create({
@@ -57,5 +57,5 @@ export default {
   create,
   deleteMessage,
   deleteMany,
-  getGeneralRoomMessages
+  getGeneralRoomMessages,
 };

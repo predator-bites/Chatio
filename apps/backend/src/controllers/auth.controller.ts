@@ -20,7 +20,9 @@ const login = (req: Request, res: Response, next: NextFunction) => {
       }
 
       if (info) {
-        return next(new ApiError(info.code, info.message, { error: info.message }))
+        return next(
+          new ApiError(info.code, info.message, { error: info.message }),
+        );
       }
 
       if (!user) {
