@@ -79,3 +79,105 @@
    - Session authentication managed via `express-session` backed by PostgreSQL (`@quixo3/prisma-session-store`).
    - API rate limiting powered by `express-rate-limit`.
    - Secure password hashing with `bcrypt`.
+
+---
+
+## 3. Local Development Setup
+
+### 1. Prerequisites
+
+- **Node.js**: `>= 18.x`
+- **npm**: `>= 9.x`
+- **PostgreSQL**: Local instance or remote cloud database (Neon, Supabase, etc.)
+
+---
+
+### 2. Environment Variables Configuration
+
+#### **Backend Environment (`apps/backend/.env`)**
+
+Create `apps/backend/.env`:
+
+```env
+PORT=3333
+MODE=development
+
+# Database Connection (PostgreSQL)
+DATABASE_URL="postgresql://user:password@localhost:5432/chatio?sslmode=disable"
+
+# Session & Security
+SESSION_SECRET="your-super-secret-key"
+SALT_OF_ROUNDS=10
+
+# CORS Allowed Origin
+ORIGIN="http://localhost:4200"
+CLIENT_ORIGIN="http://localhost:4200"
+
+# SMTP Mailer Settings (Optional for local email verification)
+SMTP_SERVER="smtp.gmail.com"
+SMTP_PORT=465
+SMTP_USER="your-email@gmail.com"
+# Create an App password for this purpose
+SMTP_PASSWORD="your-app-password"
+```
+
+#### **Frontend Environment (`apps/frontend/.env`)**
+
+Create `apps/frontend/.env`:
+
+```env
+VITE_SERVER_URL=http://localhost:3333
+VITE_API_URL=http://localhost:3333
+```
+
+---
+
+### 3. Installation & Database Setup
+
+1. **Install Monorepo Dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+2. **Provision Free Hosted Postgres Database**:
+   Get a free cloud PostgreSQL database instantly for testing without installing Postgres locally:
+
+   ```bash
+   npx create-db
+   ```
+
+   _Paste the generated database connection URL into `DATABASE_URL` inside `apps/backend/.env`._
+
+3. **Generate Prisma Client**:
+
+   ```bash
+   npx prisma generate --schema=apps/backend/prisma/schema.prisma
+   ```
+
+4. **Push Schema to Database**:
+   ```bash
+   npx prisma db push --schema=apps/backend/prisma/schema.prisma
+   ```
+
+---
+
+### 4. Running the Application Locally
+
+#### **Run Backend Server**
+
+Starts Express server on `http://localhost:3333`:
+
+```bash
+npx nx serve backend
+```
+
+#### **Run Frontend Server**
+
+Starts Vite dev server on `http://localhost:4200`:
+
+```bash
+npx nx serve frontend
+```
+
+Now open `http://localhost:4200` in your browser to run the application locally!
